@@ -1,32 +1,26 @@
 class Solution {
   public:
-  int solve(int W, vector<int> &val, vector<int> &wt,int n){
-      int t[n+1][W+1];
-      //base condition
-      for(int i = 0 ; i <=n ; i++){
-          for(int j = 0 ;j<=W ; j++){
-              if(i==0 || j==0){
-                  t[i][j]=0;
-              }
-          }
-      }
-      //case daigram
-      for(int i = 1 ; i <=n ; i++){
-          for(int j = 1 ;j<=W ; j++){
-              if(wt[i-1]<=j){
-        t[i][j]=max(val[i-1]+t[i-1][j-wt[i-1]],t[i-1][j]);
-              }
-              else{
-        t[i][j] = t[i-1][j];
-              }
-          }
-      }
-      return t[n][W];
-  }
+  int t[1001][1001];
+   int solve(int W, vector<int> &val, vector<int> &wt, int n){
+       if(n==0 || W==0) return t[n][W]=0;
+       if(t[n][W]!=-1) return t[n][W];
+       
+       //choice daigram
+       if(wt[n-1]<=W){
+       t[n][W] =  max(solve(W,val,wt,n-1),val[n-1]+solve(W-wt[n-1],val,wt,n-1));
+       }
+       else{
+       t[n][W] = solve(W,val,wt,n-1);
+       }
+       return t[n][W];
+   }
   
     int knapsack(int W, vector<int> &val, vector<int> &wt) {
         // code here
-     int n = val.size();
-     return solve(W,val,wt,n);
+    memset(t,-1,sizeof(t));
+   int n  = val.size();
+ 
+   return solve(W,val,wt,n);
+   
     }
 };
